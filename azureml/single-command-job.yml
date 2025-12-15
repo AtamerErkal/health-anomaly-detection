@@ -14,7 +14,10 @@ experiment_name: health-anomaly-detection-exp
 compute: azureml:cpu-cluster
 
 # Environment Definition: Uses the environment.yml we defined earlier
-environment: file:environment.yml
+environment: 
+  image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest # Use a standard Microsoft base image
+  conda_file: environment.yml # Reference the local Conda definition file
+  name: anomaly-detection-temp-env # Optional temporary name
 
 # Inputs: Arguments passed to the train.py script (Crucial for DP-100)
 inputs:
