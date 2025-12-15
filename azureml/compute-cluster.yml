@@ -1,0 +1,23 @@
+# Compute YAML File: azureml/compute-cluster.yml
+
+# Schema reference for AML Compute cluster definition
+$schema: https://azuremlschemas.azureedge.net/latest/compute.schema.json 
+
+# Cluster Name: Must match the 'compute:' field in single-command-job.yml
+name: cpu-cluster 
+
+# Type of Compute: Azure Machine Learning Managed Compute
+type: amlcompute
+
+# VM Size: Changed to Standard_D2_v2 (2 vCPU) from DS3_v2 (4 vCPU) to avoid quota limit issues.
+size: Standard_D2_v2
+
+# Scaling Policy for Cost Management:
+# MIN_INSTANCES: Scales down to zero when idle (Crucial for budget control/DP-100)
+min_instances: 0      
+
+# MAX_INSTANCES: Limits maximum instances to 1 to cap the maximum cost.
+max_instances: 1      
+
+# IDLE_TIME_BEFORE_SCALE_DOWN: Shuts down the cluster after 120 seconds of inactivity.
+idle_time_before_scale_down: 120
