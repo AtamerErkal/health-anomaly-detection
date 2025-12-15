@@ -1,0 +1,45 @@
+# Job YAML File: azureml/single-command-job.yml
+
+# DP-100 Standard: Schema for Azure ML Command Job
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+type: command
+
+# Job Details
+name: health-anomaly-detection-single-run
+display_name: Isolation Forest Anomaly Training
+experiment_name: health-anomaly-detection-exp
+
+# Compute Target: Cost-effective, serverless approach
+# Azure will auto-provision a CPU cluster and shut it down after inactivity.
+compute: azureml:cpu-cluster
+
+# Environment Definition: Uses the environment.yml we defined earlier
+environment: file:environment.yml
+
+# Inputs: Arguments passed to the train.py script (Crucial for DP-100)
+inputs:
+  # Data Input: References the registered Data Asset (Version 1)
+  data:
+    type: uri_folder
+    # Path format for referencing a registered asset
+    path: azureml:health-vitals-dataset:1 
+  
+  # Hyperparameter Input 1: Contamination parameter
+  contamination_param: 0.05
+  
+  # Hyperparameter Input 2: n_estimators parameter
+  n_estimators_param: 120
+
+# Command: The exact command to execute on the compute target
+# The 'code' directory is where the Python script is located
+code: ../src 
+command: >
+  python train.py 
+  --data ${{inputs.data}} 
+  --contamination ${{inputs.contamination_param}} 
+  --n_estimators ${{inputs.n_estimators_param}}
+
+# Outputs: Defines how outputs should be stored (optional, MLflow handles the model artifact)
+# outputs:
+#   model_output:
+#     type: mlflow_model
